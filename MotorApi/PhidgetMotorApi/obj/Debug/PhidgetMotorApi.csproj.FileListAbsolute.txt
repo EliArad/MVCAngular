@@ -1,0 +1,6 @@
+C:\GojiLTDTrunk\FastProject\MotorApi\PhidgetMotorApi\bin\Debug\PhidgetMotorApi.dll
+C:\GojiLTDTrunk\FastProject\MotorApi\PhidgetMotorApi\bin\Debug\PhidgetMotorApi.pdb
+C:\GojiLTDTrunk\FastProject\MotorApi\PhidgetMotorApi\bin\Debug\Phidget21.NET.dll
+C:\GojiLTDTrunk\FastProject\MotorApi\PhidgetMotorApi\obj\Debug\PhidgetMotorApi.csprojResolveAssemblyReference.cache
+C:\GojiLTDTrunk\FastProject\MotorApi\PhidgetMotorApi\obj\Debug\PhidgetMotorApi.dll
+C:\GojiLTDTrunk\FastProject\MotorApi\PhidgetMotorApi\obj\Debug\PhidgetMotorApi.pdb

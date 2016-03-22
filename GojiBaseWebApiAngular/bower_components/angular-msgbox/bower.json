@@ -1,0 +1,24 @@
+{
+  "name": "angular-msgbox",
+  "version": "0.1.1",
+  "homepage": "https://github.com/JorgeJuarezM/Angular-MsgBox",
+  "authors": [
+    "jorgejuarez <contacto@jorgejuarez.net>"
+  ],
+  "description": "Angular JS msgbox with bootstrap 3",
+  "main": "angular-msgbox.js",
+  "keywords": [
+    "angular",
+    "js",
+    "bootstrap",
+    "modal",
+    "msgbox"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "angular-bootstrap": "~0.13.3",
+    "angular": "~1.4.4",
+    "bootstrap": "~3.3.5",
+    "jquery": "~2.1.4"
+  }
+}
