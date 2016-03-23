@@ -14,7 +14,7 @@ namespace PhidgetMotorApi
 {
     public class GojiMotor : PhidgetMotor
     {
-        protected int m_motorLength = 0;
+        
         protected int m_motorIndex = 0;
         protected double m_motorLengthInMili;
 

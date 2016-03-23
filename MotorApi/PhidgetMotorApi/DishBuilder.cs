@@ -9,7 +9,9 @@ namespace PhidgetMotorApi
     public enum MOTOR_CMD
     {
         MOVMENT,
-        WAIT
+        WAIT,
+        LOOP_START,
+        LOOP_END
     }
     // example of script:
     // name: potato
@@ -52,6 +54,17 @@ namespace PhidgetMotorApi
                 throw (new SystemException("Finished"));
             }
         }
+
+        public Tuple<MOTOR_CMD, float> getCommand(int pc)
+        {
+            if (pc < m_listSize)
+                return m_motorCommands[pc];
+            else
+            {
+                throw (new SystemException("Finished"));
+            }
+        }
+
         public bool isOk()
         {
             return m_isOk;
@@ -62,10 +75,13 @@ namespace PhidgetMotorApi
         }
         public void SetScript(string script)
         {
+            int loopCount = 1;
             int [] k = new int[3];
             try
             {
+                TimeSpan m_loopTime = new TimeSpan(0, 0, 0);
                 string[] lines = script.Split(';');
+                bool loopDetected = false;
                 for (int i = 0; i < lines.Length; i++)
                 {
                     string[] s = lines[i].Split(':');
@@ -74,6 +90,24 @@ namespace PhidgetMotorApi
                     {
                         m_dishName = s[1];
                         k[0] = 1;
+                    }
+                    else if (c == "loop")
+                    {
+                        loopCount = int.Parse(s[1]);
+                        m_motorCommands.Add(new Tuple<MOTOR_CMD, float>(MOTOR_CMD.LOOP_START, float.Parse(s[1])));
+                        m_loopTime = new TimeSpan(0, 0, 0);
+                        loopDetected = true;
+                    }
+                    else if (c == "loopend")
+                    {
+                        m_motorCommands.Add(new Tuple<MOTOR_CMD, float>(MOTOR_CMD.LOOP_END, 0));
+                        TimeSpan t = m_loopTime;
+                        for (int j = 0 ; j < loopCount - 1 ; j++)
+                        {
+                            m_loopTime = m_loopTime.Add(t);
+                        }
+                        m_totalTime = m_totalTime + m_loopTime;
+                        loopDetected = false;
                     }
                     else if (c == "move")
                     {
@@ -85,7 +119,14 @@ namespace PhidgetMotorApi
                         m_motorCommands.Add(new Tuple<MOTOR_CMD, float>(MOTOR_CMD.WAIT, float.Parse(s[1])));
                         k[2] = 1;
                         TimeSpan t = new TimeSpan(0, 0, int.Parse(s[1]));
-                        m_totalTime = m_totalTime.Add(t);
+                        if (loopDetected == false)
+                        {
+                            m_totalTime = m_totalTime.Add(t);
+                        }
+                        else
+                        {
+                            m_loopTime = m_loopTime.Add(t);
+                        }
                     }
                 }
                 m_listSize = m_motorCommands.Count;

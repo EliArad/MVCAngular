@@ -1,17 +1,37 @@
 
 <style>
-    img.displayed 
-    {
-    display: block;
-    margin-left: auto;
-    margin-right: auto 
-
+    img.displayed {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
 </style>
 
 
 
+
+
 <div class="container-fluid">
+
+
+    <!-- Navbar fixed top -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+
+        <div class="row">
+            <div class="col-md-1  col-xs-4">
+                <a href="#"><img class="img-responsive" style="margin:2px;padding:0" src="/images/goji_g.png" alt="" /></a>
+            </div>
+            <div class="col-md-4 col-xs-8" style="margin-top:10px; font-size:16pt">
+                Select your dish
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top:20px">
+        &nbsp;
+    </div>
+
     <div class="row" ng-if="running == 0">
         <div class="col-*-12">
 
@@ -22,16 +42,16 @@
                 <img class="img-responsive" src="{{item.ImageSrc}}" ng-click="RunDish(item)" alt="" />
             </div>
         </div>
-    </div>   
+    </div>
     <div class="row" ng-if="running == 0">
-       
+
         <a style="cursor:pointer" ui-sref="dishconfig">
             ...
         </a>
 
 
     </div>
-    
+
     <div class="row" ng-if="running == 2">
         <div class=" col-*-offset-4 col-*-12">
             <img alt="" class="img-responsive" src="/images/Finished.jpg" ng-click="ShowStartWindow()" />

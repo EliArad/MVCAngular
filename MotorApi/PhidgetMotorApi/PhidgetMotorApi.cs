@@ -14,6 +14,7 @@ namespace PhidgetMotorApi
 
     public class PhidgetMotor
     {
+        protected int m_motorLength = 0;
         ManualResetEvent m_suspendClock = new ManualResetEvent(false);
         Thread m_process;
         bool m_runScript = false;
@@ -49,7 +50,7 @@ namespace PhidgetMotorApi
                 motoControl.SensorUpdate += new SensorUpdateEventHandler(motoControl_SensorUpdate);
 
 
-                NewMaxLength = 1000;
+                NewMaxLength = 0;
                 NewMinLength = 0;
 
                 openCmdLine(motoControl);
@@ -60,6 +61,45 @@ namespace PhidgetMotorApi
                 throw (new SystemException(err.Message));
             }
         }
+
+        public int MaxLength
+        {
+            set
+            {
+                NewMaxLength = value;                
+            }
+            get
+            {
+                return NewMaxLength;
+            }
+        }
+
+        public int MinLength
+        {
+            set
+            {
+                NewMinLength = value;
+            }
+            get
+            {
+                return NewMinLength;
+            }
+        }
+
+        public void StopScript()
+        {
+            m_runScript = false;
+            m_runmotor = false;
+
+            m_event.Set();
+            if (m_process != null)
+                m_process.Join();
+
+            m_timerEvent.Set();
+            if (m_clockThread != null)
+                m_clockThread.Join();
+        }
+
         private void openCmdLine(Phidget p)
         {
             openCmdLine(p, null);
@@ -76,14 +116,41 @@ namespace PhidgetMotorApi
         {
             m_runScript = true;
             pCallback("ScriptStarted", "");
+            int jumploop = -1;
+            int loopStartAddress = -1;
+            int pc = 0;
             while (m_runScript)
             {
                 try
                 {
-                    Tuple<MOTOR_CMD, float> n = dishList.getNextCommand();
+                    Tuple<MOTOR_CMD, float> n = dishList.getCommand(pc);
                     switch (n.Item1)
                     {
                         case MOTOR_CMD.MOVMENT:
+                            if ((int)n.Item2 > m_motorLength)
+                            {
+                                m_runScript = false;
+                                m_suspendClock.Set();
+                                string s = (int)n.Item2 + "  " + m_motorLength;
+                                pCallback("Position error", s);
+                                return;
+                            } else 
+                            if ((int)n.Item2 > MaxLength)
+                            {
+                                m_runScript = false;
+                                m_suspendClock.Set();
+                                string s = (int)n.Item2 + "  " + MaxLength;
+                                pCallback("Position error", s);
+                                return;
+                            }else
+                            if ((int)n.Item2 < MinLength)
+                            {
+                                m_runScript = false;
+                                m_suspendClock.Set();
+                                string s = (int)n.Item2 + "  " + MinLength;
+                                pCallback("Position error", s);
+                                return;
+                            }
                             SetNewPosition((int)n.Item2);
                             m_event.Reset();
                             m_event.WaitOne();
@@ -93,7 +160,19 @@ namespace PhidgetMotorApi
                             Thread.Sleep((int)n.Item2 * 1000);
                             m_suspendClock.Reset();
                         break;
+                        case MOTOR_CMD.LOOP_START:
+                            jumploop = (int)n.Item2;
+                            loopStartAddress = pc + 1;
+                        break;
+                        case MOTOR_CMD.LOOP_END:
+                            jumploop--;
+                            if (jumploop > 0)
+                            {
+                                pc = loopStartAddress;
+                            }
+                        break;
                     }
+                    pc++;
                 }
                 catch (Exception err)
                 {
@@ -135,7 +214,7 @@ namespace PhidgetMotorApi
                 if (m_runScript == false)
                     return;
                 time = time.Subtract(tsub);
-                str = time.Minutes + ":" + time.Seconds;
+                str = time.Minutes.ToString("00") + ":" + time.Seconds.ToString("00");
                 pCallback("updateClock", str);
             }
         }
@@ -265,6 +344,10 @@ namespace PhidgetMotorApi
             if ((newPosition > NewMaxLength) || (newPosition < NewMinLength))
             {
                 throw new SystemException("Please choose position between " + NewMinLength.ToString() + "[mm] to " + NewMaxLength.ToString() + "[mm]");
+            }
+            if (newPosition > m_motorLength)
+            {
+                throw new SystemException("Please choose position between between motor length in [mm]");
             }
             m_targetPosition = (float)newPosition;
             m_runmotor = true;

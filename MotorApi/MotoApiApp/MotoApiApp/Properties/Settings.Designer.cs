@@ -22,5 +22,54 @@ namespace MotoApiApp.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public string MotorLength {
+            get {
+                return ((string)(this["MotorLength"]));
+            }
+            set {
+                this["MotorLength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("name:potato;loop:2;move:40;wait:2;move:20;wait:1;move:40;wait:2;move:10;move:40;w" +
+            "ait:2;move:20;wait:1;move:40;wait:2;move:10;loopend")]
+        public string Script {
+            get {
+                return ((string)(this["Script"]));
+            }
+            set {
+                this["Script"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public string MaxLength {
+            get {
+                return ((string)(this["MaxLength"]));
+            }
+            set {
+                this["MaxLength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string MinLength {
+            get {
+                return ((string)(this["MinLength"]));
+            }
+            set {
+                this["MinLength"] = value;
+            }
+        }
     }
 }

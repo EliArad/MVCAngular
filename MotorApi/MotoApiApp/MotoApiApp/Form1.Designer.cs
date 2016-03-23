@@ -35,19 +35,25 @@
             this.button6 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.label28 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.lblTime = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(205, 103);
+            this.label27.Location = new System.Drawing.Point(14, 115);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(90, 13);
             this.label27.TabIndex = 43;
@@ -56,7 +62,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(71, 43);
+            this.label25.Location = new System.Drawing.Point(12, 50);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(81, 13);
             this.label25.TabIndex = 42;
@@ -65,7 +71,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(283, 132);
+            this.label24.Location = new System.Drawing.Point(92, 144);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(29, 13);
             this.label24.TabIndex = 41;
@@ -74,7 +80,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(148, 69);
+            this.label23.Location = new System.Drawing.Point(89, 76);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(29, 13);
             this.label23.TabIndex = 40;
@@ -82,7 +88,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(206, 148);
+            this.button6.Location = new System.Drawing.Point(15, 160);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(106, 21);
             this.button6.TabIndex = 39;
@@ -95,7 +101,7 @@
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox2.Enabled = false;
             this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.textBox2.Location = new System.Drawing.Point(74, 58);
+            this.textBox2.Location = new System.Drawing.Point(15, 65);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(71, 26);
             this.textBox2.TabIndex = 38;
@@ -103,53 +109,26 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.textBox1.Location = new System.Drawing.Point(206, 119);
+            this.textBox1.Location = new System.Drawing.Point(15, 131);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(71, 26);
             this.textBox1.TabIndex = 37;
             // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(32, 101);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(72, 13);
-            this.label26.TabIndex = 46;
-            this.label26.Text = "Manual Mode";
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(37, 146);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(38, 23);
-            this.button5.TabIndex = 45;
-            this.button5.Text = "-";
-            this.button5.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(37, 117);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(38, 23);
-            this.button3.TabIndex = 44;
-            this.button3.Text = "+";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.label28.Location = new System.Drawing.Point(12, 24);
+            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.label28.Location = new System.Drawing.Point(12, 12);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(29, 9);
+            this.label28.Size = new System.Drawing.Size(82, 15);
             this.label28.TabIndex = 47;
-            this.label28.Text = "label28";
+            this.label28.Text = "Disconnected";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.label1.Location = new System.Drawing.Point(252, 24);
+            this.label1.Location = new System.Drawing.Point(154, 19);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(25, 9);
             this.label1.TabIndex = 48;
@@ -157,7 +136,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(206, 43);
+            this.button1.Location = new System.Drawing.Point(156, 60);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(106, 21);
             this.button1.TabIndex = 49;
@@ -169,24 +148,113 @@
             // 
             this.lblTime.AutoSize = true;
             this.lblTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTime.Location = new System.Drawing.Point(429, 65);
+            this.lblTime.Location = new System.Drawing.Point(474, 65);
             this.lblTime.Name = "lblTime";
             this.lblTime.Size = new System.Drawing.Size(46, 51);
             this.lblTime.TabIndex = 50;
             this.lblTime.Text = "0";
             // 
+            // textBox3
+            // 
+            this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.textBox3.Location = new System.Drawing.Point(483, 12);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(71, 26);
+            this.textBox3.TabIndex = 51;
+            this.textBox3.Text = "100";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(403, 15);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(69, 13);
+            this.label2.TabIndex = 52;
+            this.label2.Text = "Motor length:";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(560, 11);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(47, 25);
+            this.button2.TabIndex = 53;
+            this.button2.Text = "Set";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // textBox4
+            // 
+            this.textBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.textBox4.Location = new System.Drawing.Point(156, 87);
+            this.textBox4.Multiline = true;
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(251, 138);
+            this.textBox4.TabIndex = 54;
+            // 
+            // textBox5
+            // 
+            this.textBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.textBox5.Location = new System.Drawing.Point(432, 156);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(71, 26);
+            this.textBox5.TabIndex = 55;
+            this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
+            // 
+            // textBox6
+            // 
+            this.textBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.textBox6.Location = new System.Drawing.Point(527, 156);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(71, 26);
+            this.textBox6.TabIndex = 56;
+            this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(429, 139);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(59, 13);
+            this.label3.TabIndex = 57;
+            this.label3.Text = "Max length";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(524, 139);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(60, 13);
+            this.label4.TabIndex = 58;
+            this.label4.Text = "Min Length";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(268, 60);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(106, 21);
+            this.button3.TabIndex = 59;
+            this.button3.Text = "Stop script";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(620, 184);
+            this.ClientSize = new System.Drawing.Size(620, 237);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.textBox6);
+            this.Controls.Add(this.textBox5);
+            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.textBox3);
             this.Controls.Add(this.lblTime);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label28);
-            this.Controls.Add(this.label26);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.label27);
             this.Controls.Add(this.label25);
             this.Controls.Add(this.label24);
@@ -195,7 +263,7 @@
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Phidget motor controller app";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -211,13 +279,19 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label lblTime;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button button3;
     }
 }
 
