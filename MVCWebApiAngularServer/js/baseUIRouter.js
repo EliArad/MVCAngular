@@ -1,5 +1,5 @@
 
-var App = angular.module('App', ['ui.router', 'ui.bootstrap', 'App.directives.sevensegmentComponent', 'msgbox']);
+var App = angular.module('App', ['ui.router', 'ui.bootstrap', 'App.directives.sevensegmentComponent', 'msgbox', 'ngCookies']);
 
   
     App.config(function($stateProvider, $urlRouterProvider ) {

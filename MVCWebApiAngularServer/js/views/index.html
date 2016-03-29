@@ -7,17 +7,12 @@
     }
 </style>
 
-
-
-
-
+  
 <div class="container-fluid">
 
 
     <!-- Navbar fixed top -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-
-
         <div class="row">
             <div class="col-md-1  col-xs-4">
                 <a href="#"><img class="img-responsive" style="margin:2px;padding:0" src="/images/goji_g.png" alt="" /></a>
@@ -34,12 +29,11 @@
 
     <div class="row" ng-if="running == 0">
         <div class="col-*-12">
-
             <div ng-repeat="item in DishesDataBase">
                 <h3>
                     {{item.Name}}
                 </h3>
-                <img class="img-responsive" src="{{item.ImageSrc}}" ng-click="RunDish(item)" alt="" />
+                <img class="img-responsive" style="max-height:500px" src="{{item.ImageSrc}}" ng-click="RunDish(item)" alt="" />
             </div>
         </div>
     </div>
@@ -48,8 +42,6 @@
         <a style="cursor:pointer" ui-sref="dishconfig">
             ...
         </a>
-
-
     </div>
 
     <div class="row" ng-if="running == 2">
@@ -58,7 +50,7 @@
         </div>
     </div>
 
-    <div class="row" ng-if="running == 1">
+    <div class="row" ng-if="running == 1" style="margin-top:15px">
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div class="row">
                 <p style="text-align:center">
@@ -66,10 +58,15 @@
                 </p>
             </div>
             <div class="row">
-                <img class="displayed img-responsive" alt="" style="width:auto;height:200px" src="{{currentimagedishsrc}}" />
+                <img class="displayed img-responsive" alt=""
+                     ng-click="StopCooking()"
+                     style="width:auto;height:200px" src="{{currentimagedishsrc}}" />
             </div>
+            <p style="font-size:7pt">
+                {{motorValue}}
+            </p>
             <div class="row">
-                <p style="font-size:62pt;color:greenyellow;text-align:center">
+                <p style="font-size:62pt;color:greenyellow;text-align:center" ng-click="StopCooking()">
                     {{clock}}
                 </p>
             </div>

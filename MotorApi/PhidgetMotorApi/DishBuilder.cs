@@ -11,7 +11,8 @@ namespace PhidgetMotorApi
         MOVMENT,
         WAIT,
         LOOP_START,
-        LOOP_END
+        LOOP_END,
+        SPEED
     }
     // example of script:
     // name: potato
@@ -113,6 +114,10 @@ namespace PhidgetMotorApi
                     {
                         m_motorCommands.Add(new Tuple<MOTOR_CMD, float>(MOTOR_CMD.MOVMENT, float.Parse(s[1])));
                         k[1] = 1;
+                    }
+                    else if (c == "speed")
+                    {
+                        m_motorCommands.Add(new Tuple<MOTOR_CMD, float>(MOTOR_CMD.SPEED, float.Parse(s[1])));
                     }
                     else if (c == "wait")
                     {

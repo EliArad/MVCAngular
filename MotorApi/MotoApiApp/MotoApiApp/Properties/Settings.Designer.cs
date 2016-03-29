@@ -71,5 +71,65 @@ namespace MotoApiApp.Properties {
                 this["MinLength"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public string seconds {
+            get {
+                return ((string)(this["seconds"]));
+            }
+            set {
+                this["seconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string minutes {
+            get {
+                return ((string)(this["minutes"]));
+            }
+            set {
+                this["minutes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public string AlphaConstant {
+            get {
+                return ((string)(this["AlphaConstant"]));
+            }
+            set {
+                this["AlphaConstant"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int speedLevel {
+            get {
+                return ((int)(this["speedLevel"]));
+            }
+            set {
+                this["speedLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.15")]
+        public string precision {
+            get {
+                return ((string)(this["precision"]));
+            }
+            set {
+                this["precision"] = value;
+            }
+        }
     }
 }

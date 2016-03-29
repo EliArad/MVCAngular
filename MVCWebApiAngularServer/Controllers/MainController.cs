@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using GojiBaseWebApiAngular.Models;
+using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PhidgetMotorApi;
@@ -6,6 +7,8 @@ using SignalRChat;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Web;
@@ -19,21 +22,42 @@ namespace GojiBase.Controllers
     public partial class MainController : ApiController
     {
 
-        static MotorSimulator m_motor = null;
+        static GojiMotor m_motor = null;
+        static bool m_connected = false;
 
+        Stopwatch m_sendWatch = new Stopwatch();
         public MainController()
         {
 
             if (m_motor == null)
             {
-                PhidgetMotor.MotorCallback p = new PhidgetMotor.MotorCallback(MotorFunctionCallback);
-                m_motor = new MotorSimulator(p);
-                m_motor.SetMotorLength(100);
-                m_motor.SetAlphaConstant(60);
+
+                try
+                {
+                    PhidgetMotor.MotorCallback p = new PhidgetMotor.MotorCallback(MotorFunctionCallback);
+                    m_motor = new GojiMotor(p);
+                    m_sendWatch.Restart();
+                    using (var ctx = new PicardDb())
+                    {
+                        List<AppConfig> data = (from r in ctx.m_appConfig
+                                                select r).ToList();
+
+                        m_motor.SetMotorLength(data[0].MotorLength);
+                        m_motor.MaxLength = data[0].MaxLength;
+                        m_motor.MinLength = data[0].MinLength;
+                        m_motor.SetPrecisionOnStop(0.25f);
+                    }
+                }
+                catch (Exception err)
+                {
+                    Console.WriteLine(err.Message);
+                }
             }
-
-
-        } 
+        }
+        public static GojiMotor getMotorControl()
+        {
+            return m_motor;
+        }
         [HttpGet]
         public string isauth()
         {
@@ -56,6 +80,24 @@ namespace GojiBase.Controllers
         {
             return "ok";    
         }
+
+
+        [HttpGet]
+        public string StopCooking()
+        {
+            if (m_motor != null)
+            {
+                m_motor.StopScript();
+            }
+            return "ok";    
+        }
+
+
+        [HttpGet]
+        public string isMotorConnected()
+        {
+            return m_connected == true ? "Connected" : "Disconnected";
+        }        
         
         [HttpPost]
         public IHttpActionResult RunDish(JObject  data)
@@ -66,20 +108,43 @@ namespace GojiBase.Controllers
 
             try
             {
+                if (m_connected == false)
+                {
+                    return Ok("ok");
+                }
                 dynamic json = data;
                 string dishname = json.Name;
                 string dishscript = json.Script;
 
+                int minutes = json.TimeToRun.Minutes;
+                int seconds = json.TimeToRun.Seconds;
+
+
                 DishBuilder dish = new DishBuilder(dishname);
                 dish.SetScript(dishscript);
 
-                TimeSpan time = dish.getTotalTime();
-                string str = time.Minutes + ":" + time.Seconds;
+                //TimeSpan time = dish.getTotalTime();
+
+
+                try
+                {
+                    File.Delete("c:\\log.txt");
+                }
+                catch (Exception err)
+                {
+
+                }
+                
+                TimeSpan time = new TimeSpan(0, minutes, seconds);
+                string str = time.Minutes.ToString("00") + ":" + time.Seconds.ToString("00");
 
                 var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
                 context.Clients.All.UpdateClock(str);
 
-                m_motor.RunScript(dish, true);
+                string astr = json.AlphaConstant;
+                int a = int.Parse(astr);
+                m_motor.SetAlphaConstant(a);
+                m_motor.RunScript(dish, time, true);
                 return Ok("ok");
             }
             catch (Exception err)
@@ -90,6 +155,9 @@ namespace GojiBase.Controllers
 
         protected void MotorFunctionCallback(string code, string msg)
         {
+
+            Logger m_logger = Logger.getInstance();
+            
             var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
             try
             {
@@ -97,12 +165,23 @@ namespace GojiBase.Controllers
                 {
                     case "motoControl_Detach":
                         context.Clients.All.ShowMessage("motoControl_Detach");
+                        m_logger.Write("code: " + code + "   msg:" + msg);
+                        m_connected = false;
                     break;
                     case "motoControl_Attach":                      
                         context.Clients.All.ShowMessage("motoControl_Attach");
+                        m_logger.Write("code: " + code + "   msg:" + msg);
+                        m_connected = true;
                     break;
                     case "motoControl_SensorUpdate":
-                        //Console.WriteLine("update code:"  + msg);                        
+                    {
+                        if (m_sendWatch.ElapsedMilliseconds > 1000)
+                        {
+                            //System.Diagnostics.Debug.WriteLine("update code:" + msg);
+                            context.Clients.All.MotorUpdateValue(msg);
+                            m_sendWatch.Restart();
+                        }
+                    }
                     break;
                     case "Motor Reached Position":
                         context.Clients.All.ShowMessage("Motor Reached Position");
@@ -114,7 +193,16 @@ namespace GojiBase.Controllers
                         context.Clients.All.ShowMessage("ScriptStarted");
                     break;                    
                     case "Finished":
+                        m_logger.Write("code: " + code + "   msg:" + msg);
                         context.Clients.All.ShowMessage("Finished");
+                    break;
+                    case "Position error":
+                        m_logger.Write("code: " + code + "   msg:" + msg);
+                        context.Clients.All.ShowMessage("Position error");
+                    break;
+                    case "Error":
+                         m_logger.Write("code: " + code + "   msg:" + msg);
+                        context.Clients.All.ShowMessage("Error: " + msg);
                     break;
                 }
             }
@@ -133,7 +221,12 @@ namespace GojiBase.Controllers
         [HttpGet]
         public bool IsRunning()
         {
-            return m_motor.IsRunning();
+            if (m_motor != null)
+                return m_motor.IsRunning();
+            else
+            {
+                return false;
+            }
         }
     }
 }

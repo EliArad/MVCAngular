@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="DishBuilder.cs" />
     <Compile Include="GojiMotor.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="MotorSimulator.cs" />
     <Compile Include="PhidgetMotorApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

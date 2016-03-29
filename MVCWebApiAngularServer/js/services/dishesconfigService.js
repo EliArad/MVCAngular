@@ -6,6 +6,20 @@
         return $http.get("/api/dishesconfig/getAllDishes");
     }
 
+    function GetAppConfig() {
+        return $http.get("/api/AppConfig/GetAppConfig");
+    } 
+
+    function SetDishImageId(id) {
+
+        var url = "/api/dishesconfig/SetDishImageId";
+        return $http({
+            url: url,
+            method: "GET",
+            params: { id: id }
+        });
+    }
+
     function getDishById(id) {
 
         var url = "/api/dishesconfig/getDishById";
@@ -26,13 +40,15 @@
     }
 
     function CreateNewDish(dish) {
-        var url = "/api/dishesconfig/CreateNewDish";
         return $http.post("/api/dishesconfig/CreateNewDish", dish);
     }
 
     function UpdateDish(dish) {
-        var url = "/api/dishesconfig/UpdateDish";
         return $http.post("/api/dishesconfig/UpdateDish", dish);
+    }
+
+    function UpdateAppConfig(config) {
+        return $http.post("/api/AppConfig/SaveAppConfig", config);
     }
 
     return {
@@ -40,7 +56,11 @@
         getDishById: getDishById,
         deleteDishById: deleteDishById,
         CreateNewDish: CreateNewDish,
-        UpdateDish: UpdateDish
+        UpdateDish: UpdateDish,
+        SetDishImageId: SetDishImageId,
+        UpdateAppConfig: UpdateAppConfig,
+        GetAppConfig: GetAppConfig
+
     };
 
 });

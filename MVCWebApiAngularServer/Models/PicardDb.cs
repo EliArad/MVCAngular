@@ -10,6 +10,7 @@ namespace GojiBaseWebApiAngular.Models
     public class PicardDb : DbContext
     {
         public DbSet<Dishes> m_dishes { get; set; }
+        public DbSet<AppConfig> m_appConfig { get; set; }
         
       
     }

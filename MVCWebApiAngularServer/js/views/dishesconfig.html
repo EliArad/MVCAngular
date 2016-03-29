@@ -1,14 +1,19 @@
 ﻿<div class="container-fluid" ng-controller="dishesController as vm">
 
     <a ui-sref="/"><span class="glyphicon glyphicon-home"></span></a>
-    
+     
 
     <div ng-show="hideform">
         <table class="table bordered striped">
             <tr>
+                <th>Delete</th>
                 <th>Edit</th>
                 <th>Name</th>
+                <th>Time</th>
+                <th>Alpha</th>
                 <th>Image src</th>
+                <th></th>
+                <th></th>
                 <th>Script</th>
             </tr>
             <tr ng-repeat="item in dishes">
@@ -19,9 +24,20 @@
                     <button class="btn btn-default" ng-click="editDish(item.Id)">&#9998; Edit</button>
                 </td>
                 <td>{{ item.Name }}</td>
+                <td>{{ item.TimeToRun }}</td>
+                <td>{{ item.AlphaConstant }}</td>
                 <td>{{ item.ImageSrc }}</td>
                 <td>
-                    <textarea rows="4" cols="50" style="text-align:left;white-space:nowrap" class="form-control">
+                    <input type="file"
+                           name="file"
+                           accept="image/*"
+                           onchange="angular.element(this).scope().selectFileforUpload(this.files)"  />               
+                </td>
+                <td>
+                    <button class="btn btn-default" ng-click="UploadNow(item.Id)">Upload</button>
+                </td>
+                <td>
+                    <textarea rows="4" cols="50" readonly style="text-align:left;white-space:nowrap;min-width:400px;background-color:white" class="form-control">
                         {{item.Script}}
                     </textarea>
                 </td>
@@ -30,19 +46,29 @@
         <br>
     </div>
     <div ng-show="hideform">
-        <button class="btn btn-link" ng-click="createDish()">&#9998; Create New User</button>
+        <button class="btn btn-link" ng-click="createDish()">&#9998; Create New Dish</button>
     </div>
 
-    <form ng-hide="hideform">
+    <form ng-show="createform">
         <div class="row">
             <div class="col-md-4">
                 <h3>Create new dish</h3>
                 <label>DishName:</label>
                 <input class="form-control" type="text" ng-model="vm.newEntry.dishname" placeholder="Dish name">
                 <br>
-                <label>Image src:</label>
-                <input class="form-control" type="text" ng-model="vm.newEntry.imagesrc" placeholder="Image src">
+                <label>Time:</label>
+                <input class="form-control" type="text" ng-model="vm.newEntry.TimeToRun" placeholder="Time to run">
+                <br />
                 <br>
+                <label>Alpha constant</label>
+                <input class="form-control" type="text" ng-model="vm.newEntry.AlphaConstant" placeholder="Time to run">
+                <br />
+                <input type="file"
+                        name="file"
+                        accept="image/*"
+                        onchange="angular.element(this).scope().selectFileforUpload(this.files)" required />                 
+                
+                <br />
                 <label>Script:</label>
                 <textarea rows="4" cols="50" class="form-control" ng-model="vm.newEntry.script" placeholder="Script.."></textarea>
                 <br>
@@ -59,8 +85,22 @@
                 <label>DishName:</label>
                 <input class="form-control" type="text" ng-model="vm.Entry.Name" placeholder="Dish name">
                 <br>
+                <label>Time:</label>
+                <input class="form-control" type="text" ng-model="vm.Entry.TimeToRun" placeholder="Time to run">
+                <br />
+                <br>
+                <label>Alpha constant:</label>
+                <input class="form-control" type="text" ng-model="vm.Entry.AlphaConstant" placeholder="Time to run">
+                <br />
+                <input type="file"
+                       name="file"
+                       accept="image/*"
+                       onchange="angular.element(this).scope().selectFileforUpload(this.files)" />
+                <br>
+                
                 <label>Image src:</label>
-                <input class="form-control" type="text" ng-model="vm.Entry.ImageSrc" placeholder="Image src">
+                <br />
+                {{vm.Entry.ImageSrc}}
                 <br>
                 <label>Script:</label>
                 <textarea rows="4" cols="50" class="form-control" ng-model="vm.Entry.Script" placeholder="Script.."></textarea>
@@ -69,6 +109,38 @@
             </div>
         </div>
     </form>
+
+
+
+    <form>
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Application config</h3>
+                <label>Motor length:</label>
+                <input class="form-control" 
+                        type="text" ng-model="vm.AppConfig.MotorLength" 
+                        placeholder="Dish name">
+                <br>
+
+                <label>Max length:</label>
+                <input class="form-control"
+                       type="text" ng-model="vm.AppConfig.MaxLength"
+                       placeholder="Max Length">
+                <br>
+
+                <label>Min length:</label>
+                <input class="form-control"
+                       type="text" ng-model="vm.AppConfig.MinLength"
+                       placeholder="Min Length">
+                <br>
+                
+                <button class="btn btn-success" ng-click="UpdateAppConfig()">&#10004; Update Changes</button>
+            </div>
+        </div>
+    </form>
+
+
+
 
 
 </div>

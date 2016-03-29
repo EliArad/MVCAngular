@@ -15,11 +15,18 @@ namespace GojiBaseWebApiAngular.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [Required]
         public string ImageSrc { get; set; }
-
         [Required]
         public string Script { get; set; }
+        
+        [Required]
+        public TimeSpan TimeToRun { get; set; }
+
+        [Required]
+        public int AlphaConstant { get; set; }
+
+      
+
                      
     }
 }

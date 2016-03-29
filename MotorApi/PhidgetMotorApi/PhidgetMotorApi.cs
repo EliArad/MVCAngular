@@ -12,12 +12,17 @@ using System.Threading; //Needed for the Phidget event handling classes
 namespace PhidgetMotorApi
 {
 
+
     public class PhidgetMotor
     {
+        AutoResetEvent m_timerCounter = new AutoResetEvent(false);
+        protected float m_precision = 0.15f;
+        protected int m_speedLevel = 1;
+        protected int m_motorIndex = 0;
         protected int m_motorLength = 0;
         ManualResetEvent m_suspendClock = new ManualResetEvent(false);
         Thread m_process;
-        bool m_runScript = false;
+        protected bool m_runScript = false;
         AutoResetEvent m_timerEvent = new AutoResetEvent(false);
         protected bool m_runmotor = false;
         public delegate void MotorCallback(string code, string msg);
@@ -38,7 +43,7 @@ namespace PhidgetMotorApi
             {
                 pCallback = p;
                 motoControl = new MotorControl();
-
+                m_motorIndex = motorIndex;
                 motoControl.Attach += new AttachEventHandler(motoControl_Attach);
                 motoControl.Detach += new DetachEventHandler(motoControl_Detach);
                 motoControl.Error += new ErrorEventHandler(motoControl_Error);
@@ -90,6 +95,9 @@ namespace PhidgetMotorApi
         {
             m_runScript = false;
             m_runmotor = false;
+            m_timerCounter.Set();
+
+            motoControl.motors[m_motorIndex].Velocity = 0;
 
             m_event.Set();
             if (m_process != null)
@@ -104,6 +112,16 @@ namespace PhidgetMotorApi
         {
             openCmdLine(p, null);
         }
+        public void SetPrecisionOnStop(float precision)
+        {
+            m_precision = precision;
+        }
+        public void SetSpeedLevel(int speed)
+        {
+            if (speed < 1)
+                return;
+            m_speedLevel = speed;
+        }
         public void SetAlphaConstant(int c)
         {
             m_alphaConstant = c;
@@ -114,7 +132,7 @@ namespace PhidgetMotorApi
         }
         void DishProcess(DishBuilder dishList)
         {
-            m_runScript = true;
+          
             pCallback("ScriptStarted", "");
             int jumploop = -1;
             int loopStartAddress = -1;
@@ -155,9 +173,12 @@ namespace PhidgetMotorApi
                             m_event.Reset();
                             m_event.WaitOne();
                         break;
+                        case MOTOR_CMD.SPEED:
+                            m_speedLevel = (int)n.Item2;
+                        break;
                         case MOTOR_CMD.WAIT:
-                            m_suspendClock.Set();
-                            Thread.Sleep((int)n.Item2 * 1000);
+                            m_suspendClock.Set();                            
+                            m_timerCounter.WaitOne((int)n.Item2 * 1000);
                             m_suspendClock.Reset();
                         break;
                         case MOTOR_CMD.LOOP_START:
@@ -169,6 +190,7 @@ namespace PhidgetMotorApi
                             if (jumploop > 0)
                             {
                                 pc = loopStartAddress;
+                                continue;
                             }
                         break;
                     }
@@ -179,6 +201,7 @@ namespace PhidgetMotorApi
                     if (err.Message == "Finished")
                     {
                         m_runScript = false;
+                        m_runmotor = false;
                         m_suspendClock.Set();
                         pCallback("Finished", "");
                         return;
@@ -188,17 +211,41 @@ namespace PhidgetMotorApi
         }
         public void RunScript(DishBuilder dish, bool broadcastClock)
         {
+            if (m_runScript == true)
+            {
+                throw (new SystemException("Already running"));
+            }
+
             if (!dish.isOk())
             {
                 throw (new SystemException("Script is not valid"));
             }
             m_suspendClock.Reset();
+            m_runScript = true;
             m_process = new Thread(() => DishProcess(dish));
             m_process.Start();
 
-            m_clockThread = new Thread(() => UpdateClock(dish.getTotalTime()));
+        
+            m_clockThread = new Thread(() => UpdateClock(dish.getTotalTime()));        
             m_clockThread.Start();
                  
+        }
+
+        public void RunScript(DishBuilder dish, TimeSpan time, bool broadcastClock)
+        {
+            if (!dish.isOk())
+            {
+                throw (new SystemException("Script is not valid"));
+            }
+            m_runScript = true;
+            m_suspendClock.Reset();
+            m_process = new Thread(() => DishProcess(dish));
+            m_process.Start();
+
+
+            m_clockThread = new Thread(() => BroadcastClock(time));
+            m_clockThread.Start();
+
         }
 
         private void UpdateClock(TimeSpan time)
@@ -218,6 +265,28 @@ namespace PhidgetMotorApi
                 pCallback("updateClock", str);
             }
         }
+
+        private void BroadcastClock(TimeSpan time)
+        {
+            int totalSeconds = (int)time.TotalSeconds;
+            string str;
+            TimeSpan tsub = new TimeSpan(0, 0, 1);
+            while (m_runScript && totalSeconds > 0)
+            {
+                m_timerEvent.WaitOne(1000);
+                if (m_runScript == false)
+                    return;
+                time = time.Subtract(tsub);
+                str = time.Minutes.ToString("00") + ":" + time.Seconds.ToString("00");
+                pCallback("updateClock", str);
+                totalSeconds--;
+            }
+            m_runScript = false;
+            m_runmotor = false;
+            m_suspendClock.Set();
+            pCallback("Finished", "");
+        }
+
         public void Close()
         {
             var t = new Thread(_close);
@@ -350,7 +419,9 @@ namespace PhidgetMotorApi
                 throw new SystemException("Please choose position between between motor length in [mm]");
             }
             m_targetPosition = (float)newPosition;
+            pCallback("Motor In Progress", m_targetPosition.ToString());
             m_runmotor = true;
+
         }
     }
 }

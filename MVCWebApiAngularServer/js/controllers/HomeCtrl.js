@@ -1,9 +1,13 @@
-App.controller("HomeCtrl", function ($scope, HomeService, $msgbox, $rootScope, $state, dishesconfigService)
+App.controller("HomeCtrl", function ($scope, HomeService, $msgbox, $rootScope, $state, dishesconfigService, $cookies)
 {
 
 
     var vm = $scope;
     $scope.clock = "0:0";
+
+    var expireDate = new Date();
+    expireDate.setDate(expireDate.getDate() + 10);
+   
 
     HomeService.IsRunning().then(function (result) {
         if (result.data == false)
@@ -16,8 +20,11 @@ App.controller("HomeCtrl", function ($scope, HomeService, $msgbox, $rootScope, $
             })
         } else {
             $scope.running = 1;
-            $scope.currentimagedishname = sessionStorage.getItem('currentimagedishname');
-            $scope.currentimagedishsrc = sessionStorage.getItem('currentimagedishsrc');
+            $scope.currentimagedishname = $cookies.get('currentimagedishname');
+            $scope.currentimagedishsrc = $cookies.get('currentimagedishsrc');
+
+            console.log($scope.currentimagedishsrc);
+            console.log($scope.currentimagedishname);
         }
     }).catch(function (result) {
         alert('Error detecting is running');
@@ -49,8 +56,9 @@ App.controller("HomeCtrl", function ($scope, HomeService, $msgbox, $rootScope, $
     $rootScope.$on("Finished", function () {
          
         $scope.running = 2;
-        sessionStorage.setItem('currentimagedishname', '');
-        sessionStorage.setItem('currentimagedishsrc', '');
+
+        $cookies.put('currentimagedishname', '', { 'expires': expireDate });
+        $cookies.put('currentimagedishsrc', '', { 'expires': expireDate });
         $scope.$digest();
         $scope.$apply();
          
@@ -60,16 +68,36 @@ App.controller("HomeCtrl", function ($scope, HomeService, $msgbox, $rootScope, $
     {
         if (text == 'Finished') {
             $rootScope.$broadcast('Finished');
-        }        
+        }
+        if (text == 'motoControl_Attach')
+        {
+
+        }
     }
+
+
+    
+    $scope.$on("MotorUpdateValue", function (event, value) {
+
+        $scope.motorValue = value;
+        console.log(value);
+        $scope.$digest();
+        $scope.$apply();
+    });
 
     $scope.$on("UpdateClock", function (event, message) {
         
         $scope.clock = message;
-        console.log($scope.clock);
         $scope.$digest();
         $scope.$apply();
     });
+
+    
+    $scope.MotorUpdateValue = function (value) {
+
+        //this.$emit("UpdateClock", time);
+        $rootScope.$broadcast('MotorUpdateValue', value);
+    }
 
     $scope.UpdateClock = function (time) {
 
@@ -84,29 +112,56 @@ App.controller("HomeCtrl", function ($scope, HomeService, $msgbox, $rootScope, $
         });
     }
 
-    $scope.RunDish = function(item)
+    $scope.StopCooking = function()
     {
-
         var txt;
-        var r = confirm("Do you want to start?");
+        var r = confirm("Do you want to stop?");
         if (r == false) {
             return;
         }
 
-        $scope.currentimagedishname = item.Name;
-        $scope.currentimagedishsrc = item.ImageSrc;
-
-        HomeService.RunDish(item).then(function (result) {
-
-            sessionStorage.setItem('currentimagedishname', item.Name);
-            sessionStorage.setItem('currentimagedishsrc', item.ImageSrc);
-
-            $scope.running = 1;
+        HomeService.StopCooking().then(function (result) {
+            $scope.running = 0;
         }).catch(function (result) {
             console.log(result);
             alert(result.data);
         })
+    }
 
+   
+
+    $scope.RunDish = function(item)
+    {
+        HomeService.isMotorConnected().then(function (result) {
+            if (result.data == "Connected") {
+                var txt;
+                var r = confirm("Do you want to start?");
+                if (r == false) {
+                    return;
+                }
+                 
+
+                HomeService.RunDish(item).then(function (result) {
+
+                    $scope.currentimagedishname = item.Name;
+                    $scope.currentimagedishsrc = item.ImageSrc;
+
+                    $cookies.put('currentimagedishname', item.Name, { 'expires': expireDate });
+                    $cookies.put('currentimagedishsrc', item.ImageSrc, { 'expires': expireDate });
+
+                    console.log(item);
+
+                    $scope.running = 1;
+                }).catch(function (result) {
+                    console.log(result);
+                    alert(result.data);
+                })
+            } else {
+                alert("Motor is disconncted");
+            }
+        }).catch(function (result) {
+
+        })      
     }    
 });
 

@@ -3,16 +3,20 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using System.Web.Script.Serialization;
 
 namespace GojiBaseWebApiAngular.Controllers
 {
+
     public class dishesconfigController : ApiController
     {
+        static int m_id = -1;
         
         public string getAllDishes()
         {
@@ -31,23 +35,77 @@ namespace GojiBaseWebApiAngular.Controllers
         [HttpPost]
         public string UpdateDish(JObject data)
         {
-            Dishes d = new Dishes();
-            dynamic json1 = data;
-            d.Name = json1.Name;
-            d.Id = json1.Id;
-            d.ImageSrc = json1.ImageSrc;
-            d.Script = json1.Script;
-         
-            using (var ctx = new PicardDb())
+            try
             {
-                ctx.Entry(d).State = EntityState.Modified;
-                ctx.SaveChanges();
+                Dishes d = new Dishes();
+                dynamic json1 = data;
+                d.Name = json1.Name;
+                d.Id = json1.Id;
+                d.ImageSrc = json1.ImageSrc;
+                d.Script = json1.Script;
+                d.AlphaConstant = json1.AlphaConstant;
 
+                string time = json1.TimeToRun;
+
+                string[] s = time.Split(':');
+                d.TimeToRun = new TimeSpan(0, int.Parse(s[0]), int.Parse(s[1]));
+
+                using (var ctx = new PicardDb())
+                {
+                    ctx.Entry(d).State = EntityState.Modified;
+                    ctx.SaveChanges();
+
+                    return getAllDishes();
+                }
+            }
+            catch (Exception err)
+            {
                 return getAllDishes();
             }
         }
-         
+        [HttpGet]
+        public string SetDishImageId(int id)
+        {
+            m_id = id;
+            return "ok";
+        }
 
+        [HttpPost]
+        public HttpResponseMessage SaveFiles()
+        {
+            
+            var httpRequest = HttpContext.Current.Request;
+            if (httpRequest.Files.Count > 0)
+            {
+                foreach (string file in httpRequest.Files)
+                {
+                    var postedFile = httpRequest.Files[file];
+                    var filePath = HttpContext.Current.Server.MapPath("~/Images/" + postedFile.FileName);
+                    postedFile.SaveAs(filePath);
+                
+                    if (m_id != -1)
+                    {
+                        using (var ctx = new PicardDb())
+                        {
+                            Dishes d = ctx.m_dishes.FirstOrDefault(i => i.Id == m_id);
+                            d.ImageSrc = "/Images/" + postedFile.FileName;
+                            ctx.Entry(d).State = EntityState.Modified;
+                            ctx.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        m_id = -1;
+                        return Request.CreateResponse(HttpStatusCode.BadRequest); 
+                    }
+                }
+                m_id = -1;
+                return Request.CreateResponse(HttpStatusCode.Created);
+            }
+            m_id = -1;
+            return Request.CreateResponse(HttpStatusCode.BadRequest);          
+        }
+       
 
         [HttpPost]
         public string CreateNewDish(JObject data)
@@ -56,14 +114,23 @@ namespace GojiBaseWebApiAngular.Controllers
             dynamic json1 = data;
             d.Name = json1.dishname;
             d.ImageSrc = json1.imagesrc;
+            d.TimeToRun = json1.TimeToRun;
             d.Script = json1.script;
+            d.AlphaConstant = json1.AlphaConstant;
+
+            string time = json1.TimeToRun;
+            string[] s = time.Split(':');
+            d.TimeToRun = new TimeSpan(0, int.Parse(s[0]), int.Parse(s[1]));
+
          
             using (var ctx = new PicardDb())
             {
                 ctx.Entry(d).State = EntityState.Added;
                 ctx.SaveChanges();
+                ctx.Entry(d).GetDatabaseValues();
+                int id = d.Id;
 
-                return getAllDishes();
+                return id.ToString();
             }
         }
 
